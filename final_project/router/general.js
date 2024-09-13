@@ -6,11 +6,11 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req,res) => {
-  const userName = req.body.userName;
+  const username = req.body.username;
   const password = req.body.password;
-  const userExists = Object.values(users).some(user => user.userName == userName)  // // Check if the username already exists
+  const userExists = Object.values(users).some(user => user.username == username)  // // Check if the username already exists
 
-  if (!userName || !password) {
+  if (!username || !password) {
     return res.status(400).json({ message: "Username and password are required." });
   }
 
@@ -18,10 +18,11 @@ public_users.post("/register", (req,res) => {
     res.status(409).json({ message: "User already registered." });
   } else {
     const newUser = {
-    userName : userName,
+    username : username,
     password : password
     }
     users.push(newUser);
+    return res.status(201).json({ message: "User successfully registered." });
   }
 });
 
@@ -57,7 +58,7 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  const title = req.params.title;
+  const title = req.params.title;   // req.params is used to capture route parameters from the URL path (e.g., /login/:username)
   const results = Object.values(books).filter(book => book.title == title);
 
   if (results.length > 0){
