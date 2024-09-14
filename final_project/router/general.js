@@ -33,7 +33,7 @@ public_users.post("/register", (req, res) => {
   }
 });
 
-// Task 10: Get the book list using async/await
+// Get the book list using async/await
 public_users.get('/', async function (req, res) {
   try {
     const booksData = await fetchBooks();  // Fetch books asynchronously
@@ -43,7 +43,7 @@ public_users.get('/', async function (req, res) {
   }
 });
 
-// Task 11: Get book details based on ISBN using async/await
+// Get book details based on ISBN using async/await
 public_users.get('/isbn/:isbn', async function (req, res) {
   const isbn = req.params.isbn;
 
@@ -59,7 +59,7 @@ public_users.get('/isbn/:isbn', async function (req, res) {
   }
 });
 
-// Task 12: Get book details based on author using async/await
+// Get book details based on author using async/await
 public_users.get('/author/:author', async function (req, res) {
   const author = req.params.author;
 
@@ -77,7 +77,7 @@ public_users.get('/author/:author', async function (req, res) {
   }
 });
 
-// Task 13: Get book details based on title using async/await
+// Get book details based on title using async/await
 public_users.get('/title/:title', async function (req, res) {
   const title = req.params.title;
 
