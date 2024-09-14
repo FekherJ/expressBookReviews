@@ -19,7 +19,7 @@ const authenticatedUser = (username,password)=>{ //returns boolean
 regd_users.post("/login", (req,res) => {    // user /customer/login
   const {username, password} = req.body;
   // Check if the user is already logged in
-  if (req.session.username){
+  if (req.session.authorization){
     return res.status(403).json({message: "You are already logged in."})
   }
   // Check if both username and password are provided
@@ -85,6 +85,9 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 regd_users.delete("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
 
+  // Log the session to see if the token is present
+  console.log("Session authorization:", req.session.authorization);
+
   // Check if the user is authenticated by verifying the JWT token
   if (!req.session.authorization) {
     return res.status(401).json({ message: "Please login in order to delete reviews." });
@@ -118,3 +121,4 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
+

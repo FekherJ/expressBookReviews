@@ -74,8 +74,8 @@ public_users.get('/review/:isbn',function (req, res) {
   const book = books[isbn];  
 
   if (book){
-    if (book.reviews && book.reviews.length > 0) {
-      res.json(book.reviews);
+    if (book.reviews && Object.keys(book.reviews).length > 0) {
+      res.json(book.reviews);       // Return all reviews for the given ISBN
     } else {
       res.status(404).json({ message: "No reviews found for this ISBN" });
     } 
