@@ -4,6 +4,14 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
+// Simulate an async function that returns the local books
+const fetchBooks = async () => {
+  // Simulate asynchronous fetching of books (even though it's local)
+  return new Promise((resolve) => {
+    resolve(books);
+  });
+};
+
 public_users.post("/register", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -25,24 +33,24 @@ public_users.post("/register", (req, res) => {
   }
 });
 
-// Get the book list available in the shop
-public_users.get('/', function (req, res) {
+// Task 10: Get the book list using async/await
+public_users.get('/', async function (req, res) {
   try {
-    return res.json({ message: "Books retrieved successfully", data: books });  // Directly send the books data from the object
+    const booksData = await fetchBooks();  // Fetch books asynchronously
+    return res.json({ message: "Books retrieved successfully", data: booksData });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching book list", error: error.message });
+    return res.status(500).json({ message: "Error fetching book list", error: error.message });
   }
 });
 
-// Get book details based on ISBN
-public_users.get('/isbn/:isbn', function (req, res) {
+// Task 11: Get book details based on ISBN using async/await
+public_users.get('/isbn/:isbn', async function (req, res) {
   const isbn = req.params.isbn;
-  if (!isbn) {
-    return res.status(400).json({ message: "Invalid ISBN provided." });
-  }
+
   try {
-    if (books[isbn]) {
-      return res.json({ message: "Book retrieved successfully", data: books[isbn] });
+    const booksData = await fetchBooks();  // Fetch books asynchronously
+    if (booksData[isbn]) {
+      return res.json({ message: "Book retrieved successfully", data: booksData[isbn] });
     } else {
       return res.status(404).json({ message: "No books found with this ISBN" });
     }
@@ -51,12 +59,13 @@ public_users.get('/isbn/:isbn', function (req, res) {
   }
 });
 
-// Get book details based on author
-public_users.get('/author/:author', function (req, res) {
+// Task 12: Get book details based on author using async/await
+public_users.get('/author/:author', async function (req, res) {
   const author = req.params.author;
 
   try {
-    const results = Object.values(books).filter(book => book.author === author);
+    const booksData = await fetchBooks();  // Fetch books asynchronously
+    const results = Object.values(booksData).filter(book => book.author === author);
 
     if (results.length > 0) {
       return res.json({ message: "Books retrieved successfully", data: results });
@@ -68,12 +77,13 @@ public_users.get('/author/:author', function (req, res) {
   }
 });
 
-// Get all books based on title
-public_users.get('/title/:title', function (req, res) {
+// Task 13: Get book details based on title using async/await
+public_users.get('/title/:title', async function (req, res) {
   const title = req.params.title;
 
   try {
-    const results = Object.values(books).filter(book => book.title === title);
+    const booksData = await fetchBooks();  // Fetch books asynchronously
+    const results = Object.values(booksData).filter(book => book.title === title);
 
     if (results.length > 0) {
       return res.json({ message: "Books retrieved successfully", data: results });
@@ -85,17 +95,16 @@ public_users.get('/title/:title', function (req, res) {
   }
 });
 
-// Get book review by ISBN
-public_users.get('/review/:isbn', function (req, res) {
+// Get book review by ISBN using async/await
+public_users.get('/review/:isbn', async function (req, res) {
   const isbn = req.params.isbn;
-  if (!isbn) {
-    return res.status(400).json({ message: "Invalid ISBN provided." });
-  }
+
   try {
-    const book = books[isbn];
+    const booksData = await fetchBooks();  // Fetch books asynchronously
+    const book = booksData[isbn];
 
     if (book) {
-      if (book && book.reviews && Object.keys(book.reviews).length > 0) {
+      if (book.reviews && Object.keys(book.reviews).length > 0) {
         return res.json({ message: "Reviews retrieved successfully", data: book.reviews });
       } else {
         return res.status(404).json({ message: "No reviews found for this ISBN" });
